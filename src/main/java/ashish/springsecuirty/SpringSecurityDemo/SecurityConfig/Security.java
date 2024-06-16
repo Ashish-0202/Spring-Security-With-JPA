@@ -50,7 +50,8 @@ public class Security {
                         .hasRole("ADMI/")
                         .requestMatchers(HttpMethod.POST,"/api/post")
                         .hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/getUser").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/getUser").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET,"/api/userbyid/**").hasAnyRole("ADMIN","USER")
         );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);

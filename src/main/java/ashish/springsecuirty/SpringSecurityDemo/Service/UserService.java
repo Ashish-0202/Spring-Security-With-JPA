@@ -6,9 +6,12 @@ import ashish.springsecuirty.SpringSecurityDemo.Repository.AuthorityRepository;
 import ashish.springsecuirty.SpringSecurityDemo.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -19,8 +22,15 @@ public class UserService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+
     @Transactional
     public String addUser(users user){
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
         users tmpuser=userRepository.save(user);
         for(authorities authority: user.getAuthorities()) {
             authority.setUsers(user);
@@ -32,5 +42,11 @@ public class UserService {
 
     public List<users> getUsers(){
         return userRepository.findAll();
+    }
+
+    public Optional<users> getUserbyid(int id){
+        Optional<users> user=userRepository.findById(id);
+
+        return user;
     }
 }

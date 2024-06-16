@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -36,5 +37,11 @@ public class MainController {
         logger.debug("Adding user:"+user.getUsername());
         String response=userService.addUser(user);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/userbyid/{id}")
+    public Optional<users> findbyid(@PathVariable int id){
+        Optional<users> user=userService.getUserbyid(id);
+        return user;
     }
 }
